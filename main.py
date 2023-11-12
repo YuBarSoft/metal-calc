@@ -43,6 +43,12 @@ if __name__ == "__main__":
         EC.presence_of_element_located((By.NAME, 'p'))
     ).text
 
+    input_t = driver.find_element(By.NAME, 't')  # Толщина
+    input_a = driver.find_element(By.NAME, 'a')  # Ширина
+    input_b = driver.find_element(By.NAME, 'b')  # Длина
+    input_n = driver.find_element(By.NAME, 'n')  # Количество
+    btn = driver.find_element(By.CLASS_NAME, 'btn-green')  # Кнопка
+
     for index, row in df.iterrows():
         name = row.iloc[0]  # Получение данных из столбца 'Наименование'
         artikul = row.iloc[1]  # Получение данных из столбца 'Код артикула'
@@ -51,6 +57,7 @@ if __name__ == "__main__":
         t = row.iloc[3]  # Получение данных из столбца 'Толщина'
         a = row.iloc[4]  # Получение данных из столбца 'Ширина'
         b = row.iloc[5]  # Получение данных из столбца 'Длина'
+        for_print = f'{name};{artikul};{mark};{t};{a};{b}'
 
         if mark in marks:
             select.select_by_visible_text(mark)
@@ -58,29 +65,24 @@ if __name__ == "__main__":
             mark = 'Прочее'
             select.select_by_visible_text(mark)  # марки нет в выпадающем списке
 
-        input_t = driver.find_element(By.NAME, 't')  # Толщина
         input_t.clear()
         input_t.send_keys(t)
 
-        input_a = driver.find_element(By.NAME, 'a')  # Ширина
         input_a.clear()
         input_a.send_keys(a)
 
-        input_b = driver.find_element(By.NAME, 'b')  # Длина
         input_b.clear()
         input_b.send_keys(b)
 
-        n = 1  # Количество
-        input_n = driver.find_element(By.NAME, 'n')
         input_n.clear()
-        input_n.send_keys(n)
+        input_n.send_keys(1)
 
-        driver.find_element(By.CLASS_NAME, 'btn-green').click()  # Рассчитать
+        btn.click()  # Кнопка рассчитать
 
         ves = driver.find_elements(By.CLASS_NAME, 'result-item-value')  # Парсим вес
         ves = ves[1].text.replace('кг.', 'кг')
-        for_print = f'{name};{artikul};{mark};{t};{a};{b};{ves}'
-        print(for_print)
+
+        print(f'{for_print};{ves}')
 
         row_data = {
             columns_list[0]: name,
